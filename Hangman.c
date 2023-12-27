@@ -11,7 +11,7 @@
 
 void clearScreen();
 void printHangman(int attempts);
-void printWordStatus(const char word[], const int guessedLetters);
+void printWordStatus(const char word[], const int guessedLetters[]);
 
 int main() {
     char words[MAX_WORDS][MAX_WORD_LENGTH] = {"apple", "banana", "orange", "strawberry", "mango"};
@@ -83,11 +83,11 @@ int main() {
         }
 
         // Normal timer
-        sleep(1);  // Sleep for 1 second
+        usleep(500000);  // Sleep for 0.5 seconds (500,000 microseconds)
 
         // 1-minute timer
         // Uncomment the following line if you want to add a 1-minute timer after each attempt
-        sleep(60);  // Sleep for 60 seconds
+        // usleep(60000000);  // Sleep for 60 seconds (60,000,000 microseconds)
     }
 
     printf("\nThanks for playing Hangman!\n");
