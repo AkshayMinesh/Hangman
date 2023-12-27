@@ -3,7 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
-#include <unistd.h> // for usleep
+#include <unistd.h>
 
 #define MAX_ATTEMPTS 6
 #define MAX_WORDS 5
@@ -11,7 +11,7 @@
 
 void clearScreen();
 void printHangman(int attempts);
-void printWordStatus(const char word[], const int guessedLetters[]);
+void printWordStatus(const char word[], const int guessedLetters);
 
 int main() {
     char words[MAX_WORDS][MAX_WORD_LENGTH] = {"apple", "banana", "orange", "strawberry", "mango"};
@@ -33,18 +33,38 @@ int main() {
 
     int attempts = 0;
     char guess;
+    time_t start_time, current_time;
 
     printf("Welcome to\n\n _\n| |\n| |__   __ _ _ __   __ _ _ __ ___   __ _ _ __\n| '_  / _` | '_  / _` | '_ ` _  / _` | '_  \n| | | | (_| | | | | (_| | | | | | | (_| | | | |\n|_| |_| __,_|_| |_| __, |_| |_| |_| __,_|_| |_|\n                    __/ |\n                   |___/\nTry to guess the word with the given hint.");
     printf("\nHint: %s\n", hintOfWord);
 
     while (1) {
-        // clearScreen();
+        clearScreen();
         printHangman(attempts);
         printWordStatus(wordToGuess, guessedLetters);
 
-        printf("\nEnter your guess: ");
-        scanf(" %c", &guess);
-        guess = tolower(guess);
+        printf("\nEnter your guess (you have 1 minute): ");
+
+        // Start the timer
+        time(&start_time);
+
+        // Loop until a valid input or 1 minute elapses
+        while (1) {
+            time(&current_time);
+            double elapsed_time = difftime(current_time, start_time);
+
+            if (elapsed_time >= 60.0) {
+                printf("\nTime out! You lost the game.\n");
+                return 0;
+            }
+
+            if (scanf(" %c", &guess) == 1) {
+                guess = tolower(guess);
+                break; // Exit the loop if a valid input is received
+            }
+
+            usleep(100000); // Sleep for 0.1 seconds (100,000 microseconds)
+        }
 
         int found = 0;
         for (int i = 0; i < wordLength; i++) {
@@ -81,13 +101,6 @@ int main() {
             printf("\nSorry, you have run out of attempts. The word was '%s'.\n", wordToGuess);
             break;
         }
-
-        // Normal timer
-        usleep(500000);  // Sleep for 0.5 seconds (500,000 microseconds)
-
-        // 1-minute timer
-        // Uncomment the following line if you want to add a 1-minute timer after each attempt
-        usleep(60000000);  // Sleep for 60 seconds (60,000,000 microseconds)
     }
 
     printf("\nThanks for playing Hangman!\n");
