@@ -40,39 +40,32 @@ int main() {
     printf("\nHint: %s\n", hintOfWord);
 
     while (1) {
-        clearScreen();
-        printHangman(attempts);
-        printWordStatus(wordToGuess, guessedLetters);
+    // ... (existing code)
 
-        printf("\nEnter your guess (you have 1 minute): ");
+    // Loop until a valid input or 1 minute elapses
+    while (1) {
+        // Check the timer
+        clock_t current_time = clock();
+        double elapsed_time = (double)(current_time - start_time) / CLOCKS_PER_SEC;
 
-        // Start the timer
-        clock_t start_time = clock();
-
-        // Loop until a valid input or 1 minute elapses
-        while (1) {
-            // Check the timer
-            clock_t current_time = clock();
-            double elapsed_time = (double)(current_time - start_time) / CLOCKS_PER_SEC;
-
-            if (elapsed_time >= 60.0) {
-                printf("\nTime out! You lost the game.\n");
-                return 0;  // exit the program
-            }
-
-            // Prompt for user input
-            char input[2];
-            if (fgets(input, sizeof(input), stdin) != NULL) {
-                guess = tolower(input[0]);
-                break; // Exit the loop if a valid input is received
-            }
+        if (elapsed_time >= 60.0) {
+            printf("\nTime out! You lost the game.\n");
+            return 0;  // exit the program
         }
 
-            // Sleep for a short duration to avoid high CPU usage
-            usleep(100000); // Sleep for 0.1 seconds (100,000 microseconds)
+        // Prompt for user input
+        char input[2];
+        if (fgets(input, sizeof(input), stdin) != NULL) {
+            guess = tolower(input[0]);
+            break; // Exit the loop if a valid input is received
         }
+    }
 
-        int found = 0;
+    // Remove the following lines from outside the loop
+    // usleep(100000); // Sleep for 0.1 seconds (100,000 microseconds)
+    // }
+
+    int found = 0;
         for (int i = 0; i < wordLength; i++) {
             if (wordToGuess[i] == guess) {
                 guessedLetters[i] = 1;
