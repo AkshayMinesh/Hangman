@@ -45,8 +45,8 @@ int main() {
     if (timerOption == 2) {
         printf("\nYou have 60 seconds to input each letter. Game will end if no input within the time limit.\n");
     }
-
     clock_t startTime, currentTime;
+    double elapsedSeconds;
 
     while (1) {
         clearScreen();
@@ -54,26 +54,33 @@ int main() {
         printWordStatus(wordToGuess, guessedLetters, wordLength);
 
 
-        printf("\nEnter your guess: ");
+    printf("\nEnter your guess: ");
 
-        if (timerOption == 2) {
-            startTime = clock();
-        }
+    if (timerOption == 2) {
+        startTime = clock();
+    }
 
-        scanf(" %c", &guess);
-        guess = tolower(guess);
+    int inputReceived = 0;
 
+    while (!inputReceived) {
         if (timerOption == 2) {
             currentTime = clock();
-            double elapsedSeconds = ((double)(currentTime - startTime)) / CLOCKS_PER_SEC;
+            elapsedSeconds = ((double)(currentTime - startTime)) / CLOCKS_PER_SEC;
             if (elapsedSeconds > TIMEOUT_SECONDS) {
                 clearScreen();
                 printHangman(attempts);
                 printWordStatus(wordToGuess, guessedLetters, wordLength);
                 printf("\nGame ended due to timeout. You did not input a letter within the time limit.\n");
-                return 0;
+                return 0;  // Terminate the program when the time limit is exceeded
             }
         }
+
+        if (scanf(" %c", &guess) == 1) {
+            guess = tolower(guess);
+            inputReceived = 1;
+        }
+    }
+
 
         int found = 0;
         for (int i = 0; i < wordLength; i++) {
