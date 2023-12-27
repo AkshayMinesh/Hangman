@@ -71,7 +71,7 @@ int main() {
                 printHangman(attempts);
                 printWordStatus(wordToGuess, guessedLetters, wordLength);
                 printf("\nGame ended due to timeout. You did not input a letter within the time limit.\n");
-                break;
+                return 0;
             }
         }
 
