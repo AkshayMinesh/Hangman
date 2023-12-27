@@ -3,12 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
-
-#ifdef _WIN32
-#include <windows.h>
-#else
-#include <unistd.h>
-#endif
+#include <unistd.h> // for usleep
 
 #define MAX_ATTEMPTS 6
 #define MAX_WORDS 5
@@ -104,12 +99,9 @@ int main() {
 }
 
 void clearScreen() {
-#ifdef _WIN32
-    system("cls");
-#else
     system("clear");
-#endif
 }
+
 
 void printHangman(int attempts) {
     switch (attempts) {
@@ -183,7 +175,7 @@ void printWordStatus(const char word[], const int guessedLetters[]) {
     printf("Word: ");
     for (int i = 0; i < strlen(word); i++) {
         if (guessedLetters[i]) {
-            printf("%c ",word[i]);
+            printf("%c ", word[i]);
         } else {
             printf("_ ");
         }
