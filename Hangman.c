@@ -4,15 +4,14 @@
 #include <ctype.h>
 #include <time.h>
 
-
 #define MAX_ATTEMPTS 6
 #define MAX_WORDS 5
 #define MAX_WORD_LENGTH 20
+#define TIMEOUT_SECONDS 60
 
 void clearScreen();
 void printHangman(int attempts);
-void printWordStatus(const char word[], const int guessedLetters[]);
-
+void printWordStatus(const char word[], const int guessedLetters);
 
 int main() {
     char words[MAX_WORDS][MAX_WORD_LENGTH] = {"apple", "banana", "orange", "strawberry", "mango"};
@@ -34,38 +33,47 @@ int main() {
 
     int attempts = 0;
     char guess;
-    time_t start_time, current_time;
 
     printf("Welcome to\n\n _\n| |\n| |__   __ _ _ __   __ _ _ __ ___   __ _ _ __\n| '_  / _` | '_  / _` | '_ ` _  / _` | '_  \n| | | | (_| | | | | (_| | | | | | | (_| | | | |\n|_| |_| __,_|_| |_| __, |_| |_| |_| __,_|_| |_|\n                    __/ |\n                   |___/\nTry to guess the word with the given hint.");
     printf("\nHint: %s\n", hintOfWord);
 
-    while (1) {
-    // ... (existing code)
+    int timerOption;
+    printf("\nSelect an option:\n1. Without Timer\n2. With Timer\n");
+    scanf("%d", &timerOption);
 
-    // Loop until a valid input or 1 minute elapses
-    while (1) {
-        // Check the timer
-        clock_t current_time = clock();
-        double elapsed_time = (double)(current_time - start_time) / CLOCKS_PER_SEC;
-
-        if (elapsed_time >= 60.0) {
-            printf("\nTime out! You lost the game.\n");
-            return 0;  // exit the program
-        }
-
-        // Prompt for user input
-        char input[2];
-        if (fgets(input, sizeof(input), stdin) != NULL) {
-            guess = tolower(input[0]);
-            break; // Exit the loop if a valid input is received
-        }
+    if (timerOption == 2) {
+        printf("\nYou have 60 seconds to input each letter. Game will end if no input within the time limit.\n");
     }
 
-    // Remove the following lines from outside the loop
-    // usleep(100000); // Sleep for 0.1 seconds (100,000 microseconds)
-    // }
+    clock_t startTime, currentTime;
 
-    int found = 0;
+    while (1) {
+        clearScreen();
+        printHangman(attempts);
+        printWordStatus(wordToGuess, guessedLetters);
+
+        printf("\nEnter your guess: ");
+
+        if (timerOption == 2) {
+            startTime = clock();
+        }
+
+        scanf(" %c", &guess);
+        guess = tolower(guess);
+
+        if (timerOption == 2) {
+            currentTime = clock();
+            double elapsedSeconds = ((double)(currentTime - startTime)) / CLOCKS_PER_SEC;
+            if (elapsedSeconds > TIMEOUT_SECONDS) {
+                clearScreen();
+                printHangman(attempts);
+                printWordStatus(wordToGuess, guessedLetters);
+                printf("\nGame ended due to timeout. You did not input a letter within the time limit.\n");
+                break;
+            }
+        }
+
+        int found = 0;
         for (int i = 0; i < wordLength; i++) {
             if (wordToGuess[i] == guess) {
                 guessedLetters[i] = 1;
@@ -110,11 +118,18 @@ int main() {
     return 0;
 }
 
+void clearScreen() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
+
 
 void clearScreen() {
     system("clear");
 }
-
 
 void printHangman(int attempts) {
     switch (attempts) {
@@ -185,10 +200,11 @@ void printHangman(int attempts) {
 }
 
 void printWordStatus(const char word[], const int guessedLetters[]) {
+    
     printf("Word: ");
     for (int i = 0; i < strlen(word); i++) {
         if (guessedLetters[i]) {
-            printf("%c ", word[i]);
+            printf("%c ",word[i]);
         } else {
             printf("_ ");
         }
