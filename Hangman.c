@@ -11,7 +11,8 @@
 
 void clearScreen();
 void printHangman(int attempts);
-void printWordStatus(const char word[], const int guessedLetters);
+void printWordStatus(const char word[], const int guessedLetters[]);
+
 
 int main() {
     char words[MAX_WORDS][MAX_WORD_LENGTH] = {"apple", "banana", "orange", "strawberry", "mango"};
