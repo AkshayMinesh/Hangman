@@ -87,7 +87,7 @@ int main() {
 
         // 1-minute timer
         // Uncomment the following line if you want to add a 1-minute timer after each attempt
-        // usleep(60000000);  // Sleep for 60 seconds (60,000,000 microseconds)
+        usleep(60000000);  // Sleep for 60 seconds (60,000,000 microseconds)
     }
 
     printf("\nThanks for playing Hangman!\n");
