@@ -111,6 +111,7 @@ int main() {
     return 0;
 }
 
+
 void clearScreen() {
     system("clear");
 }
