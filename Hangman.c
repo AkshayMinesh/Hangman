@@ -3,7 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
-#include <unistd.h>
+
 
 #define MAX_ATTEMPTS 6
 #define MAX_WORDS 5
@@ -47,25 +47,26 @@ int main() {
         printf("\nEnter your guess (you have 1 minute): ");
 
         // Start the timer
-        time_t start_time, current_time;
-        time(&start_time);
+        clock_t start_time = clock();
 
         // Loop until a valid input or 1 minute elapses
         while (1) {
             // Check the timer
-            time(&current_time);
-            double elapsed_time = difftime(current_time, start_time);
+            clock_t current_time = clock();
+            double elapsed_time = (double)(current_time - start_time) / CLOCKS_PER_SEC;
+
             if (elapsed_time >= 60.0) {
                 printf("\nTime out! You lost the game.\n");
                 return 0;  // exit the program
             }
 
             // Prompt for user input
-            printf("Enter your guess: ");
-            if (scanf(" %c", &guess) == 1) {
-                guess = tolower(guess);
+            char input[2];
+            if (fgets(input, sizeof(input), stdin) != NULL) {
+                guess = tolower(input[0]);
                 break; // Exit the loop if a valid input is received
             }
+        }
 
             // Sleep for a short duration to avoid high CPU usage
             usleep(100000); // Sleep for 0.1 seconds (100,000 microseconds)
