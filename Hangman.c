@@ -51,7 +51,8 @@ int main() {
     while (1) {
         clearScreen();
         printHangman(attempts);
-        printWordStatus(wordToGuess, guessedLetters);
+        printWordStatus(wordToGuess, guessedLetters, wordLength);
+
 
         printf("\nEnter your guess: ");
 
@@ -97,7 +98,8 @@ int main() {
         if (solved) {
             clearScreen();
             printHangman(attempts);
-            printWordStatus(wordToGuess, guessedLetters);
+            printWordStatus(wordToGuess, guessedLetters, wordLength);
+
             printf("\nCongratulations! You guessed the word correctly.\n");
             break;
         }
@@ -105,7 +107,8 @@ int main() {
         if (attempts >= MAX_ATTEMPTS) {
             clearScreen();
             printHangman(attempts);
-            printWordStatus(wordToGuess, guessedLetters);
+            printWordStatus(wordToGuess, guessedLetters, wordLength);
+
             printf("\nSorry, you have run out of attempts. The word was '%s'.\n", wordToGuess);
             break;
         }
