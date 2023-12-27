@@ -45,7 +45,7 @@ int main() {
         printf("\nYou have 60 seconds to input each letter. Game will end if no input within the time limit.\n");
     }
 
-    clock_t startTime, currentTime
+    clock_t startTime, currentTime;
 
     while (1) {
         clearScreen();
@@ -124,11 +124,6 @@ void clearScreen() {
 #else
     system("clear");
 #endif
-}
-
-
-void clearScreen() {
-    system("clear");
 }
 
 void printHangman(int attempts) {
