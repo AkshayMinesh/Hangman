@@ -203,5 +203,4 @@ void printWordStatus(const char word[], const int guessedLetters[], int wordLeng
             printf("_ ");
         }
     }
-    printf("\n");
-}
+    
