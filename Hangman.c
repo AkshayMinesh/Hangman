@@ -4,13 +4,19 @@
 #include <ctype.h>
 #include <time.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+
 #define MAX_ATTEMPTS 6
 #define MAX_WORDS 5
 #define MAX_WORD_LENGTH 20
 
 void clearScreen();
 void printHangman(int attempts);
-void printWordStatus(const char word[], const int guessedLetters[]);
+void printWordStatus(const char word[], const int guessedLetters);
 
 int main() {
     char words[MAX_WORDS][MAX_WORD_LENGTH] = {"apple", "banana", "orange", "strawberry", "mango"};
@@ -33,8 +39,8 @@ int main() {
     int attempts = 0;
     char guess;
 
-    printf("""Welcome to\n\n _\n| |\n| |__   __ _ _ __   __ _ _ __ ___   __ _ _ __\n| '_  / _` | '_  / _` | '_ ` _  / _` | '_  \n| | | | (_| | | | | (_| | | | | | | (_| | | | |\n|_| |_| __,_|_| |_| __, |_| |_| |_| __,_|_| |_|\n                    __/ |\n                   |___/\nTry to guess the word with the given hint.""");
-    printf("\nHint: %s\n",hintOfWord);
+    printf("Welcome to\n\n _\n| |\n| |__   __ _ _ __   __ _ _ __ ___   __ _ _ __\n| '_  / _` | '_  / _` | '_ ` _  / _` | '_  \n| | | | (_| | | | | (_| | | | | | | (_| | | | |\n|_| |_| __,_|_| |_| __, |_| |_| |_| __,_|_| |_|\n                    __/ |\n                   |___/\nTry to guess the word with the given hint.");
+    printf("\nHint: %s\n", hintOfWord);
 
     while (1) {
         // clearScreen();
@@ -80,15 +86,19 @@ int main() {
             printf("\nSorry, you have run out of attempts. The word was '%s'.\n", wordToGuess);
             break;
         }
+
+        // Normal timer
+        sleep(1);  // Sleep for 1 second
+
+        // 1-minute timer
+        // Uncomment the following line if you want to add a 1-minute timer after each attempt
+        sleep(60);  // Sleep for 60 seconds
     }
+
     printf("\nThanks for playing Hangman!\n");
     char user_input;
     printf("Enter any key to exit: ");
     scanf(" %c", &user_input);
-    // while (user_input != exit_char);
-
-    
-    
 
     return 0;
 }
@@ -170,7 +180,6 @@ void printHangman(int attempts) {
 }
 
 void printWordStatus(const char word[], const int guessedLetters[]) {
-    
     printf("Word: ");
     for (int i = 0; i < strlen(word); i++) {
         if (guessedLetters[i]) {
